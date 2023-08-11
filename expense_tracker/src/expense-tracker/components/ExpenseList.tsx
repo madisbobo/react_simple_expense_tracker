@@ -1,23 +1,22 @@
-import { useState } from "react";
-import styles from "./ExpenseList.module.css";
+interface Expense {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
+}
 
-const ExpenseList = () => {
-  const [items, setItem] = useState([
-    {
-      description: "Milk",
-      amount: 5.0,
-      category: "Groceries",
-    },
-    {
-      description: "Electricity",
-      amount: 100.0,
-      category: "Utilities",
-    },
-  ]);
+interface Props {
+  expenses: Expense[];
+  onDelete: (id: number) => void;
+}
+
+const ExpenseList = ({ expenses, onDelete }: Props) => {
+  let total = 0;
+  expenses.forEach((expense) => (total += expense.amount));
 
   return (
-    <table className={`table table-hover ${styles.table}`}>
-      <thead className="table-secondary">
+    <table className="table table-hover align-middle">
+      <thead className="table-dark">
         <tr>
           <th scope="col">Description</th>
           <th scope="col">Amount</th>
@@ -26,16 +25,16 @@ const ExpenseList = () => {
         </tr>
       </thead>
       <tbody>
-        {items.map((item, index) => (
-          <tr key={index}>
-            <th scope="row">{item.description}</th>
-            <td>{item.amount}</td>
-            <td>{item.category}</td>
+        {expenses.map((expense) => (
+          <tr key={expense.id}>
+            <td>{expense.description}</td>
+            <td>${expense.amount.toFixed(2)}</td>
+            <td>{expense.category}</td>
             <td>
               <button
                 type="button"
                 className="btn btn-outline-danger"
-                onClick={() => setItem(items.filter((_, i) => i !== index))}
+                onClick={() => onDelete(expense.id)}
               >
                 Delete
               </button>
@@ -43,6 +42,14 @@ const ExpenseList = () => {
           </tr>
         ))}
       </tbody>
+      <tfoot>
+        <tr className="table-secondary">
+          <th scope="row">Total</th>
+          <th scope="row">${total.toFixed(2)}</th>
+          <td></td>
+          <td></td>
+        </tr>
+      </tfoot>
     </table>
   );
 };
