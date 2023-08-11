@@ -11,8 +11,11 @@ interface Props {
 }
 
 const ExpenseList = ({ expenses, onDelete }: Props) => {
-  let total = 0;
-  expenses.forEach((expense) => (total += expense.amount));
+  const total = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+
+  if (expenses.length === 0) {
+    return <p>No data available.</p>;
+  }
 
   return (
     <table className="table table-hover align-middle">
